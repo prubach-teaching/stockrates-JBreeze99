@@ -1,5 +1,7 @@
 package sgh;
 
+import com.sun.net.httpserver.Headers;
+
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Files;
@@ -15,26 +17,29 @@ public class StockData {
         boolean Exists = Existe.exists();
         if (Exists == false) {
             String filePath = "data_in/" + stock + ".csv";
-            //TODO HINT: You might need to check if the file doesn't already exist...
             download("https://query1.finance.yahoo.com/v7/finance/download/" + stock + "?period1=1560667712&period2=1592290112&interval=1d&events=history",
                     filePath);
             String[] row;
             ArrayList<String> Lines = new ArrayList<>();
+            Lines.remove(0);
             ArrayList<Double> Open = new ArrayList<>();
             ArrayList<Double> Close = new ArrayList<>();
             ArrayList<String> Term = new ArrayList<>();
-            try (Scanner scan = new Scanner(Paths.get("data_in/" + stock + ".csv"))) {
-                while (scan.hasNextLine()) {
-                    String ThisLine = scan.nextLine();
+
+
+            try (Scanner scanner = new Scanner(Paths.get("data_in/"+stock+".csv"))) {
+                while (scanner.hasNextLine()) {
+                    String ThisLine = scanner.nextLine();
                     row = ThisLine.split(",");
                     Lines.add(ThisLine);
+
                     if (!(row[1].equals("Open"))) {
-                        double Start = Double.valueOf(row[1]);
-                        Open.add(Start);
+                        double op = Double.valueOf(row[1]);
+                        Open.add(op);
                     }
                     if (!row[4].equals("Close")) {
-                        double Finish = Double.valueOf(row[4]);
-                        Close.add(Finish);
+                        double finish = Double.valueOf(row[4]);
+                        Close.add(finish);
                     }
                 }
             }
@@ -42,12 +47,13 @@ public class StockData {
                 System.out.println("Warning" + exception.getMessage());
             }
             for (int i = 0; i < Open.size(); i++) {
-                Term.add(Double.toString(100 * (Open.get(i) - Close.get(i)) / Open.get(i)));
+                Term.add(Double.toString(100.0* (Open.get(i) - Close.get(i)) / Open.get(i)));
             }
-            FileWriter filewriter = new FileWriter("data_out/" + stock + ".csv");
+            FileWriter filewriter = new FileWriter("data_out/"+stock+".csv");
+
             BufferedWriter bufferedwriter = new BufferedWriter(filewriter);
             for (int j = 0; j < Lines.size(); j++) {
-                bufferedwriter.write(Lines.get(j-1) + Term.get(j));
+                bufferedwriter.write(Lines.get(j) + Term.get(j));
             }
             bufferedwriter.close();
             filewriter.close();
@@ -61,34 +67,9 @@ public class StockData {
     }
 
     public static void main(String[] args) throws IOException {
-        String[] Stocks = new String[]{"TSLA", "AAPL", "GOOG"};
-        for (String S : Stocks) {
-            getAndProcessChange(S);
+        String[] stocks = new String[]{"TSLA", "AAPL", "GOOG"};
+        for (String s : stocks) {
+            getAndProcessChange(s);
         }
     }
 }
-
-
-
-
-
-
-
-
-
-//        File myFile= new File(filePath);
-//        System.out.println("Exists: " + myFile.exists());
-//
-//
-//
-//        //TODO Your code here
-//    }
-//
-//    public static void download(String url, String fileName) throws IOException {
-//        try (InputStream in = URI.create(url).toURL().openStream()) {
-//            Files.copy(in, Paths.get(fileName));
-//        }
-//    }
-//
-
-//}
