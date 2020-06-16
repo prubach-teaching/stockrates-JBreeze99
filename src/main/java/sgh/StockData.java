@@ -17,7 +17,7 @@ public class StockData {
             String filePath = "data_in/" + stock + ".csv";
             //TODO HINT: You might need to check if the file doesn't already exist...
             download("https://query1.finance.yahoo.com/v7/finance/download/" + stock +
-                            "GC=F?period1=1559376902&period2=1590999302&interval=1d&events=history",
+                            "?period1=1560667712&period2=1592290112&interval=1d&events=history",
                     filePath);
             String[] row;
             ArrayList<String> Lines = new ArrayList<>();
@@ -48,8 +48,8 @@ public class StockData {
             }
             FileWriter filewriter = new FileWriter("data_out/" + stock + " .csv");
             BufferedWriter bufferedwriter = new BufferedWriter(filewriter);
-            for (int l = 0; l < Lines.size(); l++) {
-                bufferedwriter.write(Lines.get(l) + Term.get(l));
+            for (int j = 0; j < Lines.size(); j++) {
+                bufferedwriter.write(Lines.get(j) + Term.get(j));
             }
             bufferedwriter.close();
             filewriter.close();
@@ -63,9 +63,9 @@ public class StockData {
     }
 
     public static void main(String[] args) throws IOException {
-        String[] Currencies = new String[]{"GPB", "EUR", "USD"};
-        for (String C : Currencies) {
-            getAndProcessChange(C);
+        String[] Stocks = new String[]{"TSLA", "AAPL", "GOOG"};
+        for (String S : Stocks) {
+            getAndProcessChange(S);
         }
     }
 }
