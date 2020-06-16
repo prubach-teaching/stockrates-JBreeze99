@@ -46,7 +46,7 @@ public class StockData {
             }
             FileWriter filewriter = new FileWriter("data_out/" + stock + ".csv");
             BufferedWriter bufferedwriter = new BufferedWriter(filewriter);
-            for (int j = 0; j < Lines.size(); j++) {
+            for (int j = 1; j < Lines.size(); j++) {
                 bufferedwriter.write(Lines.get(j) + Term.get(j));
             }
             bufferedwriter.close();
