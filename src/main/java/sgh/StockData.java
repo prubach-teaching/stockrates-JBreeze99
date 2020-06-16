@@ -20,8 +20,8 @@ public class StockData {
             download("https://query1.finance.yahoo.com/v7/finance/download/" + stock + "?period1=1560667712&period2=1592290112&interval=1d&events=history",
                     filePath);
             String[] row;
+            ArrayList<String> header= new ArrayList<>();
             ArrayList<String> Lines = new ArrayList<>();
-            Lines.remove(0);
             ArrayList<Double> Open = new ArrayList<>();
             ArrayList<Double> Close = new ArrayList<>();
             ArrayList<String> Term = new ArrayList<>();
@@ -32,7 +32,6 @@ public class StockData {
                     String ThisLine = scanner.nextLine();
                     row = ThisLine.split(",");
                     Lines.add(ThisLine);
-
                     if (!(row[1].equals("Open"))) {
                         double op = Double.valueOf(row[1]);
                         Open.add(op);
@@ -47,10 +46,9 @@ public class StockData {
                 System.out.println("Warning" + exception.getMessage());
             }
             for (int i = 0; i < Open.size(); i++) {
-                Term.add(Double.toString(100.0* (Open.get(i) - Close.get(i)) / Open.get(i)));
+                Term.add(Double.toString(100.0* (Open.get(i) - Close.get(i))/Open.get(i)));
             }
             FileWriter filewriter = new FileWriter("data_out/"+stock+".csv");
-
             BufferedWriter bufferedwriter = new BufferedWriter(filewriter);
             for (int j = 0; j < Lines.size(); j++) {
                 bufferedwriter.write(Lines.get(j) + Term.get(j));
