@@ -16,8 +16,7 @@ public class StockData {
         if (Exists == false) {
             String filePath = "data_in/" + stock + ".csv";
             //TODO HINT: You might need to check if the file doesn't already exist...
-            download("https://query1.finance.yahoo.com/v7/finance/download/" + stock +
-                            "?period1=1560667712&period2=1592290112&interval=1d&events=history",
+            download("https://query1.finance.yahoo.com/v7/finance/download/" + stock + "?period1=1560667712&period2=1592290112&interval=1d&events=history",
                     filePath);
             String[] row;
             ArrayList<String> Lines = new ArrayList<>();
@@ -32,21 +31,20 @@ public class StockData {
                     if (!(row[1].equals("Open"))) {
                         double Start = Double.valueOf(row[1]);
                         Open.add(Start);
-
                     }
                     if (!row[4].equals("Close")) {
                         double Finish = Double.valueOf(row[4]);
                         Close.add(Finish);
-
                     }
                 }
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 System.out.println("Warning" + exception.getMessage());
             }
             for (int i = 0; i < Open.size(); i++) {
                 Term.add(Double.toString(100 * (Open.get(i) - Close.get(i)) / Open.get(i)));
             }
-            FileWriter filewriter = new FileWriter("data_out/" + stock + " .csv");
+            FileWriter filewriter = new FileWriter("data_out/" + stock + ".csv");
             BufferedWriter bufferedwriter = new BufferedWriter(filewriter);
             for (int j = 0; j < Lines.size(); j++) {
                 bufferedwriter.write(Lines.get(j) + Term.get(j));
